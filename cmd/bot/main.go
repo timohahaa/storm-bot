@@ -2,8 +2,8 @@ package main
 
 import (
 	log "github.com/sirupsen/logrus"
-	"github.com/timohahaa/gw/config"
-	"github.com/timohahaa/gw/internal/service"
+	"github.com/timohahaa/storm-bot/config"
+	"github.com/timohahaa/storm-bot/internal/service"
 )
 
 func main() {
