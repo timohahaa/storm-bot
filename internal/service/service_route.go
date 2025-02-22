@@ -7,7 +7,7 @@ import (
 
 func (srv *Service) route() {
 	var (
-		h = handlers.New(srv.conn, *srv.cfg)
+		h = handlers.New(srv.bot, srv.conn, *srv.cfg)
 	)
 
 	srv.bot.Handle(telebot.OnText, h.OnMessage)
