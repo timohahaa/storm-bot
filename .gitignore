@@ -1,2 +1,5 @@
 .build
 .env
+query.sql
+sqlc.yaml
+codegen/

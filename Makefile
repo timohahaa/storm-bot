@@ -23,4 +23,3 @@ run:
 
 compose:
 	docker compose --env-file deploy/.env up --build
-
