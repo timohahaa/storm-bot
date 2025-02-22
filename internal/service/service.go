@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	log "github.com/sirupsen/logrus"
@@ -36,6 +37,14 @@ func New(cfg *config.Config) (*Service, error) {
 		return nil, err
 	}
 
+	if s.bot, err = telebot.NewBot(telebot.Settings{
+		Token:  cfg.BotToken,
+		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
+	}); err != nil {
+		log.Errorf("[service] error creating bot: %v", err)
+		return nil, err
+	}
+
 	s.route()
 
 	return s, nil
@@ -50,11 +59,19 @@ func (srv *Service) Run() error {
 		}
 	)
 
+	go func() {
+		log.Info("[service] bot started.")
+		srv.bot.Start()
+	}()
+
 	signal.Notify(srv.signal, signals...)
 	signal := <-srv.signal
 
 	log.Infof("[service] handled signal: %v", signal)
 	log.Info("[service] shutting down...")
+
+	srv.bot.Stop()
+	log.Info("[service] bot polling shut down.")
 
 	return nil
 }

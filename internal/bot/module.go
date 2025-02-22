@@ -7,10 +7,10 @@ import (
 )
 
 type Module struct {
-	conn *pgxpool.Conn
+	conn *pgxpool.Pool
 }
 
-func New(conn *pgxpool.Conn) *Module {
+func New(conn *pgxpool.Pool) *Module {
 	return &Module{
 		conn: conn,
 	}
