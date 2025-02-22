@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  bot:
+    container_name: storm-bot
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    env_file: ./deploy/.env
+    #ports: 
+    #  - ${HTTP_PORT}:${HTTP_PORT}
+    #expose:
+    #  - ${HTTP_PORT}
+    depends_on:
+      postgres:
+        condition: service_healthy
+   
+  postgres:
+    container_name: postgres
+    restart: unless-stopped
+    image: postgres:16
+    env_file: ./deploy/.env
+    ports:
+      - 5433:${POSTGRES_PORT}
+    expose:
+      - ${POSTGRES_PORT}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  pg_data:
