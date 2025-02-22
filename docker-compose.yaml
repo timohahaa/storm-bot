@@ -8,16 +8,12 @@ services:
       context: .
       dockerfile: deploy/Dockerfile
     env_file: ./deploy/.env
-    #ports: 
-    #  - ${HTTP_PORT}:${HTTP_PORT}
-    #expose:
-    #  - ${HTTP_PORT}
     depends_on:
       postgres:
         condition: service_healthy
    
   postgres:
-    container_name: postgres
+    container_name: postgres-storm-bot
     restart: unless-stopped
     image: postgres:16
     env_file: ./deploy/.env

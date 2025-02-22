@@ -29,6 +29,7 @@ func New(cfg *config.Config) (*Service, error) {
 		}
 		err error
 	)
+	s.runMigrations()
 
 	if s.conn, err = pgxpool.New(context.Background(), cfg.PostgresDSN); err != nil {
 		log.Errorf("[service] error connecting to postgres: %v", err)

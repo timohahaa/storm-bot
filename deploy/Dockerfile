@@ -18,5 +18,6 @@ FROM alpine:latest
 
 WORKDIR /app
 COPY --from=builder /src/.build ./
+COPY --from=builder /src/migrations/ ./migrations/
 
 ENTRYPOINT [ "./bot" ]
