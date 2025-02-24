@@ -30,7 +30,7 @@ INSERT INTO core.link (
     , chat_id 
     , link 
 ) VALUES (
-    $1, $2
+    $1, $2, $3
 )
 RETURNING 
     id
@@ -44,16 +44,16 @@ INSERT INTO core.link (
     , chat_id 
     , link 
 ) VALUES (
-    $1, $2
+    $1, $2, $3
 )
 `
 	monthLinkStatsQuery = `
 SELECT 
-    CU.telegram_id
+    CL.user_id
     , CL.link
 FROM core.link CL
-JOIN core.user CU ON CU.id = CL.user_id
 WHERE EXTRACT(MONTH FROM CL.created_at) = $1
+    AND EXTRACT(YEAR FROM CL.created_at) = EXTRACT(YEAR FROM CURRENT_DATE)
     AND CL.deleted_at IS NULL
 `
 )

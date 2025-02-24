@@ -17,9 +17,11 @@ build:
 	@#@du -h .build/bot
 
 run:
-	HTTP_PORT=8000 \
 	POSTGRES_DSN=postgres://postgres:password@localhost:5432/main?sslmode=disable \
 	go run cmd/bot/main.go
+
+migrate-down:
+	go run cmd/db/main.go --dsn 'postgres://postgres:password@0.0.0.0:5433/main?sslmode=disable'
 
 compose:
 	docker compose --env-file deploy/.env up --build

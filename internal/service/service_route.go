@@ -18,4 +18,5 @@ func (srv *Service) route() {
 	adminOnly := srv.bot.Group()
 	adminOnly.Use(mw.Whitelist(srv.cfg.AdminIDs...))
 	adminOnly.Handle("/threadid", h.GetThreadID)
+	adminOnly.Handle("/report", h.GetReport)
 }

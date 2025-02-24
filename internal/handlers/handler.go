@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"net/url"
+	"strings"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	log "github.com/sirupsen/logrus"
@@ -45,4 +47,36 @@ func extractLinks(msg *telebot.Message) []string {
 	}
 
 	return links
+}
+
+func parseMonth(text string) uint {
+	switch strings.ToLower(text) {
+	case "january", "январь":
+		return 1
+	case "february", "февраль":
+		return 2
+	case "march", "март":
+		return 3
+	case "april", "апрель":
+		return 4
+	case "may", "май":
+		return 5
+	case "june", "июнь":
+		return 6
+	case "july", "июль":
+		return 7
+	case "august", "август":
+		return 8
+	case "september", "сентябрь":
+		return 9
+	case "october", "октябрь":
+		return 10
+	case "november", "ноябрь":
+		return 11
+	case "december", "декабрь":
+		return 12
+	}
+
+	// default -> current month
+	return uint(time.Now().Month())
 }

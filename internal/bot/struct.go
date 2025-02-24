@@ -18,6 +18,6 @@ type User struct {
 }
 
 type UserLink struct {
-	UserTelegramID int64  `db:"telegram_id" json:"telegram_id"`
-	Link           string `db:"link"        json:"link"`
+	UserID int64  `db:"user_id" json:"user_id"`
+	Link   string `db:"link"    json:"link"`
 }
