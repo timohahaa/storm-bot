@@ -50,6 +50,32 @@ func (m *Module) CreateLink(ctx context.Context, userID, chatID int64, link stri
 	return l, err
 }
 
+func (m *Module) CreateLinks(ctx context.Context, userID, chatID int64, links []string) error {
+	tx, err := m.conn.Begin(ctx)
+	if err != nil {
+		return err
+	}
+
+	stmt, err := tx.Prepare(
+		ctx,
+		"create-links",
+		createLinkQueryNoReturning,
+	)
+	if err != nil {
+		_ = tx.Rollback(ctx)
+		return err
+	}
+
+	for _, link := range links {
+		if _, err := tx.Exec(ctx, stmt.Name, userID, chatID, link); err != nil {
+			_ = tx.Rollback(ctx)
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Module) MonthLinkStats(ctx context.Context, month uint) ([]UserLink, error) {
 	rows, err := m.conn.Query(ctx, monthLinkStatsQuery, month)
 	if err != nil {

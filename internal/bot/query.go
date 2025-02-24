@@ -38,6 +38,15 @@ RETURNING
     , chat_id
     , link
 `
+	createLinkQueryNoReturning = `
+INSERT INTO core.link (
+    user_id
+    , chat_id 
+    , link 
+) VALUES (
+    $1, $2
+)
+`
 	monthLinkStatsQuery = `
 SELECT 
     CU.telegram_id

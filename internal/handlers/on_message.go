@@ -1,16 +1,26 @@
 package handlers
 
 import (
+	//"context"
 	"fmt"
 
+	//log "github.com/sirupsen/logrus"
 	"gopkg.in/telebot.v4"
 )
 
 func (h *Handler) OnMessage(c telebot.Context) error {
-	fmt.Printf("%+v\n\n", c.Message().ThreadID)
-
-	c.Send(telebot.ChatID(-1002429016999), "test-send", &telebot.SendOptions{
-		ThreadID: 130,
-	})
+	links := extractLinks(c.Message())
+	if len(links) != 0 {
+		//if err := h.mod.CreateLinks(
+		//	context.Background(),
+		//	c.Sender().ID,
+		//	c.Chat().ID,
+		//	links,
+		//); err != nil {
+		//	log.Errorf("[bot] (OnMessage): %v", err)
+		//	return nil
+		//}
+		fmt.Println(links)
+	}
 	return nil
 }
