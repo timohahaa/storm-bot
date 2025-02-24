@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/telebot.v4"
@@ -20,7 +19,6 @@ func (h *Handler) OnMessage(c telebot.Context) error {
 			log.Errorf("[bot] (OnMessage): %v", err)
 			return nil
 		}
-		fmt.Println(links)
 	}
 	return nil
 }

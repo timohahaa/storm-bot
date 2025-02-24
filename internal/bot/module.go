@@ -73,7 +73,7 @@ func (m *Module) CreateLinks(ctx context.Context, userID, chatID int64, links []
 		}
 	}
 
-	return nil
+	return tx.Commit(ctx)
 }
 
 func (m *Module) MonthLinkStats(ctx context.Context, month uint) ([]UserLink, error) {
@@ -87,7 +87,7 @@ func (m *Module) MonthLinkStats(ctx context.Context, month uint) ([]UserLink, er
 	for rows.Next() {
 		var i UserLink
 		if err := rows.Scan(
-			&i.UserTelegramID,
+			&i.UserID,
 			&i.Link,
 		); err != nil {
 			return nil, err
