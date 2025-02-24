@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	PostgresDSN string `env:"POSTGRES_DSN" env-required:"true" env-default:"postgres://postgres:password@localhost:5432/main?sslmode=disable"`
-	BotToken    string `env:"BOT_TOKEN"    env-required:"true"`
+	PostgresDSN string  `env:"POSTGRES_DSN" env-required:"true" env-default:"postgres://postgres:password@localhost:5432/main?sslmode=disable"`
+	BotToken    string  `env:"BOT_TOKEN"    env-required:"true"`
+	AdminIDs    []int64 `env:"ADMIN_IDS"    env-required:"true"`
 }
 
 func New() (*Config, error) {
