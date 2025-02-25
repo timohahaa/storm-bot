@@ -5,6 +5,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/telebot.v4"
+	"gopkg.in/telebot.v4/react"
 )
 
 func (h *Handler) OnMessage(c telebot.Context) error {
@@ -19,6 +20,11 @@ func (h *Handler) OnMessage(c telebot.Context) error {
 			log.Errorf("[bot] (OnMessage): %v", err)
 			return nil
 		}
+
+		// note to user that their message was processed
+		c.Bot().React(c.Recipient(), c.Message(), telebot.Reactions{
+			Reactions: []telebot.Reaction{react.ThumbUp}},
+		)
 	}
 	return nil
 }
