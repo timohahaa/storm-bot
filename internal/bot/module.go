@@ -76,14 +76,18 @@ func (m *Module) CreateLinks(ctx context.Context, userID, chatID int64, links []
 	return tx.Commit(ctx)
 }
 
-func (m *Module) MonthLinkStats(ctx context.Context, month uint) ([]UserLink, error) {
+func (m *Module) MonthLinkStats(
+	ctx context.Context,
+	month uint,
+	getUsernameFunc func(int64) (string, error),
+) (map[string][]string, error) {
 	rows, err := m.conn.Query(ctx, monthLinkStatsQuery, month)
 	if err != nil {
 		return nil, err
 	}
 
 	defer rows.Close()
-	var items []UserLink
+	var stats = make(map[string][]string)
 	for rows.Next() {
 		var i UserLink
 		if err := rows.Scan(
@@ -92,10 +96,20 @@ func (m *Module) MonthLinkStats(ctx context.Context, month uint) ([]UserLink, er
 		); err != nil {
 			return nil, err
 		}
-		items = append(items, i)
+
+		username, err := getUsernameFunc(i.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		if links, ok := stats[username]; ok {
+			stats[username] = append(links, i.Link)
+		} else {
+			stats[username] = []string{i.Link}
+		}
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	return items, nil
+	return stats, nil
 }
