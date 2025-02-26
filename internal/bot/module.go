@@ -80,14 +80,14 @@ func (m *Module) MonthLinkStats(
 	ctx context.Context,
 	month uint,
 	getUsernameFunc func(int64) (string, error),
-) (map[string][]string, error) {
+) (Report, error) {
 	rows, err := m.conn.Query(ctx, monthLinkStatsQuery, month)
 	if err != nil {
 		return nil, err
 	}
 
 	defer rows.Close()
-	var stats = make(map[string][]string)
+	var stats = make(Report)
 	for rows.Next() {
 		var i UserLink
 		if err := rows.Scan(
