@@ -24,4 +24,6 @@ CREATE TABLE IF NOT EXISTS core.link (
     , created_at   TIMESTAMP  NOT NULL  DEFAULT CURRENT_TIMESTAMP
     , updated_at   TIMESTAMP  
     , deleted_at   TIMESTAMP  
-)
+);
+
+CREATE INDEX idx_core_link_created_at ON core.link(created_at);

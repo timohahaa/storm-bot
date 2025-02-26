@@ -37,7 +37,7 @@ func extractLinks(msg *telebot.Message) []string {
 		case telebot.EntityTextLink:
 			links = append(links, e.URL)
 		case telebot.EntityURL:
-			link := text[e.Offset : e.Offset+e.Length]
+			link := string([]rune(text)[e.Offset : e.Offset+e.Length])
 			if _, err := url.Parse(link); err != nil {
 				log.Warnf("not a valid url: %v", link)
 				continue

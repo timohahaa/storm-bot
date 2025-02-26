@@ -14,36 +14,39 @@ func (h *Handler) GetReport(c telebot.Context) error {
 		msg   *telebot.Message
 		err   error
 	)
+	defer func() {
+		if err != nil {
+			log.Errorf("[bot] (GetReport): %v", err)
+		}
+	}()
 
+	// 1
 	msg, err = c.Bot().Reply(c.Message(), "Starting...")
 	if err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
 	}
 
+	// 2
 	if msg, err = c.Bot().Edit(msg, "Querying db..."); err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
 	}
+
 	ret, err := h.mod.MonthLinkStats(context.Background(), month, h.getUsernameByID)
 	if err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
 	}
 
+	// 3
 	if msg, err = c.Bot().Edit(msg, "Building excel file..."); err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
-		return err
 	}
 	xlsx, err := ret.ToExcel()
 	if err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
 	}
 
+	// 4
 	if msg, err = c.Bot().Edit(msg, "Uploading file to Telegram servers..."); err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
 	}
 
@@ -51,7 +54,6 @@ func (h *Handler) GetReport(c telebot.Context) error {
 		File:     telebot.FromReader(xlsx),
 		FileName: fmt.Sprintf("report-%d.xlsx", month),
 	}); err != nil {
-		log.Errorf("[bot] (GetReport): %v", err)
 		return c.Reply(fmt.Sprintf("Internal error: %v", err))
 	}
 
