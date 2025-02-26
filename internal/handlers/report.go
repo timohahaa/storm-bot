@@ -22,9 +22,9 @@ func (h *Handler) GetReport(c telebot.Context) error {
 		return err
 	}
 
-	_, err = h.b.Send(c.Recipient(), &telebot.Document{
+	_, err = h.b.Reply(c.Message(), &telebot.Document{
 		File:     telebot.FromReader(xlsx),
-		FileName: "report.xlsx",
+		FileName: fmt.Sprintf("report-%d.xlsx", month),
 	})
 
 	if err != nil {
