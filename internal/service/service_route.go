@@ -12,7 +12,10 @@ func (srv *Service) route() {
 		h = handlers.New(srv.bot, srv.conn, *srv.cfg)
 	)
 
-	srv.bot.Handle(telebot.OnText, h.OnMessage, middleware.IsGroup())
+	srv.bot.Handle(telebot.OnText, h.OnMessage,
+		middleware.IsGroup(),
+		middleware.ThreadID(130),
+	)
 	srv.bot.Handle("/start", h.OnStart)
 
 	adminOnly := srv.bot.Group()
