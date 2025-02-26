@@ -26,4 +26,4 @@ CREATE TABLE IF NOT EXISTS core.link (
     , deleted_at   TIMESTAMP  
 );
 
-CREATE INDEX idx_core_link_created_at ON core.link(created_at);
+CREATE INDEX idx_core_link_created_at_month ON core.link(EXTRACT(MONTH FROM created_at));

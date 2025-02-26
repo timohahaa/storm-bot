@@ -87,7 +87,7 @@ func (m *Module) MonthLinkStats(
 	}
 
 	defer rows.Close()
-	var stats = make(Report)
+	var stats = make(map[int64][]string)
 	for rows.Next() {
 		var i UserLink
 		if err := rows.Scan(
@@ -97,19 +97,24 @@ func (m *Module) MonthLinkStats(
 			return nil, err
 		}
 
-		username, err := getUsernameFunc(i.UserID)
-		if err != nil {
-			return nil, err
-		}
-
-		if links, ok := stats[username]; ok {
-			stats[username] = append(links, i.Link)
+		if links, ok := stats[i.UserID]; ok {
+			stats[i.UserID] = append(links, i.Link)
 		} else {
-			stats[username] = []string{i.Link}
+			stats[i.UserID] = []string{i.Link}
 		}
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	return stats, nil
+
+	var rep = make(Report, len(stats))
+	for id, links := range stats {
+		username, err := getUsernameFunc(id)
+		if err != nil {
+			return nil, err
+		}
+
+		rep[username] = links
+	}
+	return rep, nil
 }
